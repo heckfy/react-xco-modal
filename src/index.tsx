@@ -1,69 +1,51 @@
-import * as React from "react"
-import * as styles from "./styles.scss"
-import ActionsContext from "./ActionsContext"
-import ModalBody from "./ModalBody"
-import ModalButton from "./ModalButton"
-import ModalFooter from "./ModalFooter"
-import ModalHeader from "./ModalHeader"
-import ReactDOM from "react-dom"
-import getScrollBarSize from "rc-util/lib/getScrollBarSize"
+import * as s from "./styles.scss"
+import React, { CSSProperties, FunctionComponent, ReactNode, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
+import { getFocusableElements } from "utils"
+import { handleKeyPress, handleOverlayOnClick } from "handles"
 
 interface IModalProps {
+  children: ReactNode | ReactNode[]
   show: boolean
+  shouldCloseOnOverlayClick?: boolean
+  shouldCloseOnEsc?: boolean
+  style?: CSSProperties
   onHide: () => void
 }
 
-class Modal extends React.PureComponent<IModalProps, {}> {
-  private id: string
+let focusableElements: HTMLElement[] = []
+let focusedElementBeforeShow: HTMLElement = null
 
-  constructor(props: IModalProps) {
-    super(props)
-    this.patchBodyAttributes = this.patchBodyAttributes.bind(this)
-  }
+const Modal: FunctionComponent<IModalProps> = ({
+  children,
+  show,
+  style,
+  shouldCloseOnEsc = true,
+  shouldCloseOnOverlayClick = true,
+  onHide
+}) => {
+  const onKeyPress = (event: KeyboardEvent) => handleKeyPress(event, focusableElements, shouldCloseOnEsc, onHide)
+  const onOverlayClick = (event: React.MouseEvent<HTMLDivElement>) =>
+    handleOverlayOnClick(event, shouldCloseOnOverlayClick, onHide)
 
-  public componentDidMount() {
-    this.id = Math.random()
-      .toString(36)
-      .substr(2, 9)
+  if (!show) {
+    document.removeEventListener("keydown", onKeyPress, false)
+    focusedElementBeforeShow && focusedElementBeforeShow.focus()
+    return null
   }
-
-  public render(): React.ReactNode {
-    this.patchBodyAttributes()
-    const { show, children, onHide } = this.props
-    if (!show) {
-      return null
-    }
-    return ReactDOM.createPortal(
-      <ActionsContext.Provider value={{ onHide }}>
-        <div className={styles.modal}>
-          <div className={styles.modal_content}>{children}</div>
-        </div>
-      </ActionsContext.Provider>,
-      document.querySelector("body")
-    )
-  }
-
-  private showPatch() {
-    document.body.setAttribute("data-modal-id", this.id)
-    document.body.style["overflow"] = "hidden"
-    document.body.style["paddingRight"] = `${getScrollBarSize()}px`
-  }
-
-  private hidePatch() {
-    document.body.removeAttribute("data-modal-id")
-    document.body.style["overflow"] = "auto"
-    document.body.style["paddingRight"] = ""
-  }
-
-  private patchBodyAttributes = () => {
-    if (this.props.show) {
-      this.showPatch()
-    } else {
-      if (document.body.getAttribute("data-modal-id") === this.id) {
-        this.hidePatch()
-      }
-    }
-  }
+  document.addEventListener("keydown", onKeyPress, false)
+  useEffect(() => {
+    focusableElements = getFocusableElements(ref.current)
+    focusableElements[0].focus()
+  }, [])
+  focusedElementBeforeShow = document.activeElement as HTMLElement
+  const ref = useRef(null)
+  return createPortal(
+    <div {...{ className: s.modal, style, onClick: onOverlayClick, ref }}>
+      <div className={s.modal_content}>{children}</div>
+    </div>,
+    document.querySelector("body")
+  )
 }
 
-export { Modal, ModalBody, ModalButton, ModalFooter, ModalHeader }
+export { Modal }

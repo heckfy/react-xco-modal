@@ -6,7 +6,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   &_content {
     background: #fff;
@@ -14,73 +14,5 @@
     max-width: 1300px;
     width: 90%;
     margin: 30px auto;
-  }
-  &_header {
-    position: relative;
-    height: 70px;
-    h1 {
-      margin-top: 20px;
-      display: inline-block;
-      padding: 0px 70px 0px 30px;
-      font-size: 21px;
-      line-height: 33px;
-      // padding-bottom: 21px;
-    }
-    &_close {
-      position: absolute;
-      right: 30px;
-      top: 20px;
-      width: 32px;
-      height: 32px;
-      opacity: 0.3;
-      cursor: pointer;
-      &:hover {
-        opacity: 1;
-      }
-      &:before, &:after {
-        position: absolute;
-        left: 15px;
-        content: ' ';
-        height: 33px;
-        width: 2px;
-        background-color: #333;
-      }
-      &:before {
-        transform: rotate(45deg);
-      }
-      &:after {
-        transform: rotate(-45deg);
-      }
-    }
-  }
-  &_body {
-    padding: 30px;
-  }
-  &_footer {
-    background: #e6ecec;
-    padding: 30px;
-    text-align: right;
-  }
-  &_button {
-    color: #00adb1;
-    background: none;
-    border: 1px solid #00adb1;
-    height: 30px;
-    padding: 0 10px;
-    margin-left: 10px;
-    font-size: 15px!important;
-    box-shadow: 0 0 0 rgba(0,0,0,.15);
-    text-shadow: 0 0 0 rgba(0,0,0,.2);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all .2s linear;
-    &:hover {
-      color: #f15755;
-      border: 1px solid #f15755;
-    }
-    &:disabled {
-      color: #DCDCDF;
-      border: 1px solid #DCDCDF;
-    }
   }
 }
