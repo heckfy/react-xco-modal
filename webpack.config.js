@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./docs/index.tsx",
   devtool: "inline-source-map",
   mode: "development",
   module: {
@@ -44,7 +44,9 @@ module.exports = {
     new ExtractTextPlugin({
       filename: "index.css"
     }),
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin({
+      template: "docs/index.html"
+    })
   ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
@@ -52,8 +54,7 @@ module.exports = {
       new TsconfigPathsPlugin({
         configFile: "./tsconfig.json"
       })
-    ],
-    mainFields: ["main"]
+    ]
   },
   output: {
     filename: "index.js",
