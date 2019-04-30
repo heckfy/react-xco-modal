@@ -1,0 +1,46 @@
+{
+  "name": "react-xco-modal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "<git_repo_url>"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.config.js",
+    "build": "webpack",
+    "lint": "./node_modules/.bin/eslint src/**/*.tsx"
+  },
+  "author": {
+    "name": "heckfy"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "babel-loader": "^8.0.5",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "html-webpack-plugin": "^3.2.0",
+    "prettier": "^1.17.0",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-dev-server": "^3.3.1"
+  }
+}
