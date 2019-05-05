@@ -1,5 +1,4 @@
 const webpack = require("webpack")
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
 var reactExternal = {
@@ -27,20 +26,17 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: [
-            {
-              loader: "css-loader",
-              options: {
-                importLoaders: 1,
-                modules: true,
-                localIdentName: "[name]__[local]___[hash:base64:5]"
-              }
-            },
-            "sass-loader"
-          ]
-        })
+        use: [
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+              modules: true,
+              localIdentName: "[name]__[local]___[hash:base64:5]"
+            }
+          },
+          "sass-loader"
+        ]
       },
       {
         test: /\.(tsx|ts)$/,
@@ -49,11 +45,6 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new ExtractTextPlugin({
-      filename: "index.css"
-    })
-  ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
     plugins: [
