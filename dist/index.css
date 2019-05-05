@@ -1,0 +1,16 @@
+.styles__modal___3lxdo {
+  overflow: auto;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000; }
+  .styles__modal_content___21d1k {
+    background: #fff;
+    min-width: 980px;
+    max-width: 1300px;
+    width: 90%;
+    margin: 30px auto; }
