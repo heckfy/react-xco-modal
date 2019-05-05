@@ -14,7 +14,12 @@ const App: FunctionComponent<{}> = () => {
         <input type="text" />
       </form>
       <button onClick={() => setShow(true)}>SHOW</button>
-      <Modal show={show} onHide={hideModal} style={customStyles}>
+      <Modal
+        show={show}
+        onHide={hideModal}
+        style={customStyles}
+        parentSelector={document.querySelector("#root")}
+      >
         <h1>ModalBody</h1>
         <form>
           <input type="text" />
