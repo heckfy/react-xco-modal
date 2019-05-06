@@ -7,6 +7,7 @@ import React, {
 } from "react"
 import { createPortal } from "react-dom"
 import { getFocusableElements } from "utils"
+import { useHandles } from "handles"
 
 interface IModalProps {
   children: ReactNode | ReactNode[]
@@ -17,9 +18,6 @@ interface IModalProps {
   style?: { [key: string]: CSSProperties }
   onHide: () => void
 }
-
-const ESC_KEY = 27
-const TAB_KEY = 9
 
 const defaultStyle = {
   overlay: {
@@ -52,52 +50,13 @@ const Modal: FunctionComponent<IModalProps> = ({
   show,
   style,
   onHide
-}) => {
-  const handleBackwardTab = (event: KeyboardEvent) => {
-    if (document.activeElement === focusableElements[0]) {
-      event.preventDefault()
-      focusableElements[focusableElements.length - 1].focus()
-    }
-  }
-
-  const handleForwardTab = (event: KeyboardEvent) => {
-    if (document.activeElement === [...focusableElements].pop()) {
-      event.preventDefault()
-      focusableElements[0].focus()
-    }
-  }
-
-  const handleKeyPress = (event: KeyboardEvent) => {
-    switch (event.keyCode) {
-      case ESC_KEY:
-        {
-          if (shouldCloseOnEsc) {
-            event.stopPropagation()
-            onHide()
-          }
-        }
-        break
-      case TAB_KEY:
-        {
-          if (focusableElements.length === 1) {
-            event.preventDefault()
-          }
-          if (event.shiftKey) {
-            handleBackwardTab(event)
-          } else {
-            handleForwardTab(event)
-          }
-        }
-        break
-    }
-  }
-
-  const handleOverlayOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    if (event.target === event.currentTarget && shouldCloseOnOverlayClick) {
-      onHide()
-    }
-  }
+}): JSX.Element => {
+  const { handleKeyPress, handleOverlayOnClick } = useHandles(
+    focusableElements,
+    shouldCloseOnEsc,
+    shouldCloseOnOverlayClick,
+    onHide
+  )
 
   if (!show) {
     document.removeEventListener("keydown", handleKeyPress, false)
@@ -105,14 +64,15 @@ const Modal: FunctionComponent<IModalProps> = ({
     return null
   }
 
-  useEffect(() => {
+  const ref = useRef(null)
+
+  useEffect((): void => {
     document.addEventListener("keydown", handleKeyPress, false)
     focusableElements = getFocusableElements(ref.current)
     focusableElements[0].focus()
     focusedElementBeforeShow = document.activeElement as HTMLElement
   }, [])
 
-  const ref = useRef(null)
   return createPortal(
     <div
       {...{
@@ -134,7 +94,7 @@ Modal.defaultProps = {
   shouldCloseOnOverlayClick: true,
   show: false,
   style: {},
-  onHide: () => {}
+  onHide: (): void => {}
 }
 
 export { Modal }
