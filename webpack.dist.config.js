@@ -25,20 +25,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: "css-loader",
-            options: {
-              importLoaders: 1,
-              modules: true,
-              localIdentName: "[name]__[local]___[hash:base64:5]"
-            }
-          },
-          "sass-loader"
-        ]
-      },
-      {
         test: /\.(tsx|ts)$/,
         exclude: /node_modules/,
         loader: "babel-loader"

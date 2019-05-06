@@ -6,7 +6,7 @@ const App: FunctionComponent<{}> = () => {
   const [show, setShow] = useState(false)
   const hideModal = () => setShow(false)
   const customStyles = {
-    background: "rgba(255, 0, 255, 0.5)"
+    overlay: { background: "rgba(255, 0, 255, 0.5)" }
   }
   return (
     <Fragment>
@@ -14,12 +14,7 @@ const App: FunctionComponent<{}> = () => {
         <input type="text" />
       </form>
       <button onClick={() => setShow(true)}>SHOW</button>
-      <Modal
-        show={show}
-        onHide={hideModal}
-        style={customStyles}
-        parentSelector={document.querySelector("#root")}
-      >
+      <Modal show={show} onHide={hideModal} style={customStyles}>
         <h1>ModalBody</h1>
         <form>
           <input type="text" />

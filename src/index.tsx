@@ -1,4 +1,3 @@
-import * as s from "./styles.scss"
 import React, {
   CSSProperties,
   FunctionComponent,
@@ -15,12 +14,32 @@ interface IModalProps {
   shouldCloseOnEsc?: boolean
   shouldCloseOnOverlayClick?: boolean
   show: boolean
-  style?: CSSProperties
+  style?: { [key: string]: CSSProperties }
   onHide: () => void
 }
 
 const ESC_KEY = 27
 const TAB_KEY = 9
+
+const defaultStyle = {
+  overlay: {
+    overflow: "auto",
+    position: "fixed" as "fixed",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    background: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000
+  },
+  modal: {
+    background: "#fff",
+    minWidth: "980px",
+    maxWidth: "1300px",
+    width: "90%",
+    margin: "30px auto"
+  }
+}
 
 let focusableElements: HTMLElement[] = []
 let focusedElementBeforeShow: HTMLElement = null
@@ -85,16 +104,24 @@ const Modal: FunctionComponent<IModalProps> = ({
     focusedElementBeforeShow && focusedElementBeforeShow.focus()
     return null
   }
-  document.addEventListener("keydown", handleKeyPress, false)
+
   useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress, false)
     focusableElements = getFocusableElements(ref.current)
     focusableElements[0].focus()
+    focusedElementBeforeShow = document.activeElement as HTMLElement
   }, [])
-  focusedElementBeforeShow = document.activeElement as HTMLElement
+
   const ref = useRef(null)
   return createPortal(
-    <div {...{ className: s.modal, style, onClick: handleOverlayOnClick, ref }}>
-      <div className={s.modal_content}>{children}</div>
+    <div
+      {...{
+        onClick: handleOverlayOnClick,
+        ref,
+        style: { ...defaultStyle.overlay, ...style.overlay }
+      }}
+    >
+      <div style={{ ...defaultStyle.modal, ...style.modal }}>{children}</div>
     </div>,
     parentSelector
   )
