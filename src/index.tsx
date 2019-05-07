@@ -6,10 +6,10 @@ import React, {
   useRef
 } from "react"
 import { createPortal } from "react-dom"
-import { getFocusableElements } from "utils"
-import { useHandles } from "handles"
+import { getFocusableElements, setFocus } from "utils"
+import { handleKeyPress, handleOverlayClick } from "handles"
 
-interface IModalProps {
+interface ModalProps {
   children: ReactNode | ReactNode[]
   parentSelector?: HTMLElement
   shouldCloseOnEsc?: boolean
@@ -42,7 +42,7 @@ const defaultStyle = {
 let focusableElements: HTMLElement[] = []
 let focusedElementBeforeShow: HTMLElement = null
 
-const Modal: FunctionComponent<IModalProps> = ({
+const Modal: FunctionComponent<ModalProps> = ({
   children,
   parentSelector,
   shouldCloseOnEsc,
@@ -51,32 +51,31 @@ const Modal: FunctionComponent<IModalProps> = ({
   style,
   onHide
 }): JSX.Element => {
-  const { handleKeyPress, handleOverlayOnClick } = useHandles(
-    focusableElements,
-    shouldCloseOnEsc,
-    shouldCloseOnOverlayClick,
-    onHide
-  )
-
-  if (!show) {
-    document.removeEventListener("keydown", handleKeyPress, false)
-    focusedElementBeforeShow && focusedElementBeforeShow.focus()
-    return null
-  }
+  const onKeyPress = handleKeyPress(focusableElements, shouldCloseOnEsc, onHide)
+  const onOverlayClick = handleOverlayClick(shouldCloseOnOverlayClick, onHide)
 
   const ref = useRef(null)
 
   useEffect((): void => {
-    document.addEventListener("keydown", handleKeyPress, false)
-    focusableElements = getFocusableElements(ref.current)
-    focusableElements[0].focus()
-    focusedElementBeforeShow = document.activeElement as HTMLElement
-  }, [])
+    if (show) {
+      document.addEventListener("keydown", onKeyPress, false)
+      focusableElements = getFocusableElements(ref.current)
+      setFocus(focusableElements[0])
+      focusedElementBeforeShow = document.activeElement as HTMLElement
+    } else {
+      document.removeEventListener("keydown", onKeyPress, false)
+      setFocus(focusedElementBeforeShow)
+    }
+  }, [show])
+
+  if (!show) {
+    return null
+  }
 
   return createPortal(
     <div
       {...{
-        onClick: handleOverlayOnClick,
+        onClick: onOverlayClick,
         ref,
         style: { ...defaultStyle.overlay, ...style.overlay }
       }}

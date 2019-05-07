@@ -1,17 +1,11 @@
 const ESC_KEY = 27
 const TAB_KEY = 9
 
-interface IUseHandles {
-  handleKeyPress: (event: KeyboardEvent) => void
-  handleOverlayOnClick: (event: React.MouseEvent<HTMLDivElement>) => void
-}
-
-const useHandles = (
+const handleKeyPress = (
   focusableElements: HTMLElement[],
   shouldCloseOnEsc: boolean,
-  shouldCloseOnOverlayClick: boolean,
   onHide: () => void
-): IUseHandles => {
+) => (event: KeyboardEvent) => {
   const handleBackwardTab = (event: KeyboardEvent) => {
     if (document.activeElement === focusableElements[0]) {
       event.preventDefault()
@@ -25,40 +19,38 @@ const useHandles = (
       focusableElements[0].focus()
     }
   }
-
-  const handleKeyPress = (event: KeyboardEvent) => {
-    switch (event.keyCode) {
-      case ESC_KEY:
-        {
-          if (shouldCloseOnEsc) {
-            event.stopPropagation()
-            onHide()
-          }
+  switch (event.keyCode) {
+    case ESC_KEY:
+      {
+        if (shouldCloseOnEsc) {
+          event.stopPropagation()
+          onHide()
         }
-        break
-      case TAB_KEY:
-        {
-          if (focusableElements.length === 1) {
-            event.preventDefault()
-          }
-          if (event.shiftKey) {
-            handleBackwardTab(event)
-          } else {
-            handleForwardTab(event)
-          }
+      }
+      break
+    case TAB_KEY:
+      {
+        if (focusableElements.length === 1) {
+          event.preventDefault()
         }
-        break
-    }
+        if (event.shiftKey) {
+          handleBackwardTab(event)
+        } else {
+          handleForwardTab(event)
+        }
+      }
+      break
   }
-
-  const handleOverlayOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    if (event.target === event.currentTarget && shouldCloseOnOverlayClick) {
-      onHide()
-    }
-  }
-
-  return { handleKeyPress, handleOverlayOnClick }
 }
 
-export { useHandles }
+const handleOverlayClick = (
+  shouldCloseOnOverlayClick: boolean,
+  onHide: () => void
+) => (event: React.MouseEvent<HTMLDivElement>) => {
+  event.preventDefault()
+  if (event.target === event.currentTarget && shouldCloseOnOverlayClick) {
+    onHide()
+  }
+}
+
+export { handleKeyPress, handleOverlayClick }
