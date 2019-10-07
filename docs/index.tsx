@@ -1,6 +1,6 @@
 import React, { Fragment, useState, FunctionComponent } from "react"
 import ReactDOM from "react-dom"
-import { Modal } from "./../src"
+import Modal from "./../src"
 
 const App: FunctionComponent<{}> = () => {
   const [show, setShow] = useState(false)

@@ -6,17 +6,17 @@ import React, {
   useRef
 } from "react"
 import { createPortal } from "react-dom"
-import { getFocusableElements, setFocus } from "utils"
-import { handleKeyPress, handleOverlayClick } from "handles"
+import { getFocusableElements, setFocus } from "./utils"
+import { handleKeyPress, handleOverlayClick } from "./handles"
 
 interface ModalProps {
-  children: ReactNode | ReactNode[]
+  children?: string | ReactNode | ReactNode[]
   parentSelector?: HTMLElement
   shouldCloseOnEsc?: boolean
   shouldCloseOnOverlayClick?: boolean
-  show: boolean
+  show?: boolean
   style?: { [key: string]: CSSProperties }
-  onHide: () => void
+  onHide?: () => void
 }
 
 const defaultStyle = {
@@ -98,4 +98,4 @@ Modal.defaultProps = {
   onHide: (): void => {}
 }
 
-export { Modal }
+export default Modal
