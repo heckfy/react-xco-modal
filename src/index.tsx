@@ -27,7 +27,7 @@ const defaultStyle = {
     right: 0,
     bottom: 0,
     left: 0,
-    background: "rgba(0, 0, 0, 0.5)",
+    background: "rgba(83, 83, 83, 0.5)",
     zIndex: 1000
   },
   modal: {
@@ -39,7 +39,6 @@ const defaultStyle = {
   }
 }
 
-let focusableElements: HTMLElement[] = []
 let focusedElementBeforeShow: HTMLElement = null
 
 const Modal: FunctionComponent<ModalProps> = ({
@@ -51,15 +50,20 @@ const Modal: FunctionComponent<ModalProps> = ({
   style,
   onHide
 }): JSX.Element => {
-  const onKeyPress = handleKeyPress(focusableElements, shouldCloseOnEsc, onHide)
   const onOverlayClick = handleOverlayClick(shouldCloseOnOverlayClick, onHide)
-
   const ref = useRef(null)
 
   useEffect((): void => {
+    const focusableElements: HTMLElement[] = ref.current
+      ? getFocusableElements(ref.current)
+      : []
+    const onKeyPress = handleKeyPress(
+      focusableElements,
+      shouldCloseOnEsc,
+      onHide
+    )
     if (show) {
       document.addEventListener("keydown", onKeyPress, false)
-      focusableElements = getFocusableElements(ref.current)
       setFocus(focusableElements[0])
       focusedElementBeforeShow = document.activeElement as HTMLElement
     } else {
@@ -68,9 +72,7 @@ const Modal: FunctionComponent<ModalProps> = ({
     }
   }, [show])
 
-  if (!show) {
-    return null
-  }
+  if (!show) return null
 
   return createPortal(
     <div

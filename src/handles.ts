@@ -19,6 +19,7 @@ const handleKeyPress = (
       focusableElements[0].focus()
     }
   }
+  
   switch (event.keyCode) {
     case ESC_KEY:
       {
