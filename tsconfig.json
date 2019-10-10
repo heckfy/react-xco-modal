@@ -8,7 +8,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "outDir": "./dist/",
+    "outDir": "./build/",
     "target": "es5",
     "downlevelIteration": true,
     "skipLibCheck": true,

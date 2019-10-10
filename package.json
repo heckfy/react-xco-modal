@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.js",
-    "build": "webpack  --config webpack.dist.config.js",
+    "build": "webpack  --config webpack.build.config.js",
     "lint": "./node_modules/.bin/eslint src/**/*.tsx",
     "size": "yarn build && size-limit",
     "test": "jest"
@@ -19,8 +19,8 @@
   },
   "license": "ISC",
   "dependencies": {
-    "react": "^16.9",
-    "react-dom": "^16.9"
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -58,7 +58,7 @@
   "size-limit": [
     {
       "webpack": false,
-      "path": "dist/index.js",
+      "path": "build/index.js",
       "limit": "2 KB"
     }
   ]
