@@ -5,39 +5,34 @@ const handleKeyPress = (
   focusableElements: HTMLElement[],
   shouldCloseOnEsc: boolean,
   onHide: () => void
-) => (event: KeyboardEvent) => {
-  const handleBackwardTab = (event: KeyboardEvent) => {
+) => (e: KeyboardEvent): void => {
+  const handleBackwardTab = (e: KeyboardEvent): void => {
     if (document.activeElement === focusableElements[0]) {
-      event.preventDefault()
+      e.preventDefault()
       focusableElements[focusableElements.length - 1].focus()
     }
   }
 
-  const handleForwardTab = (event: KeyboardEvent) => {
+  const handleForwardTab = (e: KeyboardEvent): void => {
     if (document.activeElement === [...focusableElements].pop()) {
-      event.preventDefault()
+      e.preventDefault()
       focusableElements[0].focus()
     }
   }
-  switch (event.keyCode) {
+
+  switch (e.keyCode) {
     case ESC_KEY:
       {
         if (shouldCloseOnEsc) {
-          event.stopPropagation()
+          e.stopPropagation()
           onHide()
         }
       }
       break
     case TAB_KEY:
       {
-        if (focusableElements.length === 1) {
-          event.preventDefault()
-        }
-        if (event.shiftKey) {
-          handleBackwardTab(event)
-        } else {
-          handleForwardTab(event)
-        }
+        if (focusableElements.length === 1) e.preventDefault()
+        e.shiftKey ? handleBackwardTab(e) : handleForwardTab(e)
       }
       break
   }
@@ -46,11 +41,9 @@ const handleKeyPress = (
 const handleOverlayClick = (
   shouldCloseOnOverlayClick: boolean,
   onHide: () => void
-) => (event: React.MouseEvent<HTMLDivElement>) => {
-  event.preventDefault()
-  if (event.target === event.currentTarget && shouldCloseOnOverlayClick) {
-    onHide()
-  }
+) => (e: React.MouseEvent<HTMLDivElement>): void => {
+  e.preventDefault()
+  if (e.target === e.currentTarget && shouldCloseOnOverlayClick) onHide()
 }
 
 export { handleKeyPress, handleOverlayClick }
